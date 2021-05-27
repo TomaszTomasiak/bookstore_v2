@@ -1,0 +1,14 @@
+# run the app
+./gradlew bootRun
+
+# get all the books
+curl -i -X GET http://localhost:8080/books/
+
+# get one book
+curl -i -X GET http://localhost:8080/books/1
+
+# add a new book (jakiś błąd jest w zpisie
+curl -i -X POST -d {"title":"Our Mew Book", "author":"My Name!"} http://localhost:8080/books/ -H "Content-Type: application/json"
+
+# get all books again to verify
+curl -i -X GET http://localhost:8080/books/
