@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Book} from './book/book';
 import {BookService} from './book/book-service.service';
 import {Router} from "@angular/router";
+import {SplitioService} from "./splitio.service";
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import {Router} from "@angular/router";
 export class AppComponent implements OnInit {
   title = 'BookStore';
   books: Book[] | undefined;
+  private splitIoService: any;
 
   constructor(private router: Router, private bookService: BookService) {
   }
@@ -34,9 +36,15 @@ export class AppComponent implements OnInit {
       });
   };
 
+  deleteBook(book: { id: number; }) { this.bookService.deleteBook(book.id); this.router.navigate(['list-books']); }
+
+  deleteAllowed() { return this.splitIoService.isTreatmentOn('allow-delete'); }
+
   ngOnInit(): void {
     this.router.events.subscribe(value => {
       this.getBooks();
     });
+    this.splitIoService.initSdk(); // <-- Add This Line
   }
+
 }
