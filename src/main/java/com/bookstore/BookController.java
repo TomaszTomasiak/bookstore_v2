@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     BookRepository bookRepository;
+    SplitWrapper splitWrapper;
 
-    public BookController(BookRepository bookRepository) {
-
+    public BookController(BookRepository bookRepository, SplitWrapper splitWrapper) {
         this.bookRepository = bookRepository;
+        this.splitWrapper = splitWrapper;
+
     }
 
     @GetMapping("/books/")
@@ -29,5 +31,16 @@ public class BookController {
         bookRepository.save(book);
 
         return HttpStatus.CREATED;
+    }
+
+    @DeleteMapping("/books/{id}")
+    public HttpStatus deleteBook(@PathVariable("id") Long id) {
+        if (splitWrapper.isTreatmentOn("allow-delete")) {
+            bookRepository.deleteById(id);
+
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.NOT_FOUND;
+        }
     }
 }
